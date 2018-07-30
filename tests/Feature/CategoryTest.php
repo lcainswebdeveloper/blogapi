@@ -5,21 +5,9 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ExampleTest extends TestCase
+class CategoryTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testBasicTest()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     
     /** @test **/
     public function create_a_category()
@@ -30,6 +18,7 @@ class ExampleTest extends TestCase
         $category = $this->json("POST", "/api/category/create", [
             'title' => 'Lews Category'
         ]);
+        
         $category->assertStatus(201);
         
         $this->assertEquals(

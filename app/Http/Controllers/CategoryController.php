@@ -36,11 +36,7 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $category = new Category;
-        $category->title = $title = $request->title;
-        $category->slug = slugify($title);
-        $category->user_id = auth()->id();
-        $category->save();
+        $category = $request->createNew();
         return response()->json($category, 201);
     }
 

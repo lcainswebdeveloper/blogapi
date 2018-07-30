@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Category;
 
 class CategoryRequest extends FormRequest
 {
@@ -26,5 +27,14 @@ class CategoryRequest extends FormRequest
         return [
             'title' => 'required|unique:categories,title'
         ];
+    }
+
+    public function createNew(){
+        $category = new Category;
+        $category->title = $title = $this->title;
+        $category->slug = slugify($title);
+        $category->user_id = auth()->id();
+        $category->save();
+        return $category;
     }
 }
