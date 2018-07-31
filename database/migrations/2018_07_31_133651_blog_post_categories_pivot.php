@@ -13,10 +13,10 @@ class BlogPostCategoriesPivot extends Migration
      */
     public function up()
     {
-        Schema::create('blog_post_categories_pivot', function (Blueprint $table) {
-            $table->integer('blog_post_id');
+        Schema::create('blog_posts_categories_pivot', function (Blueprint $table) {
+            $table->integer('blog_posts_id');
             $table->integer('category_id');
-            $table->primary(['blog_post_id', 'category_id'], 'blog_post_category_key');
+            $table->primary(['blog_posts_id', 'category_id'], 'blog_posts_category_key');
         });
     }
 

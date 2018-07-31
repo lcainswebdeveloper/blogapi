@@ -19,7 +19,7 @@ class CreateCategoryTest extends TestCase
             'title' => 'Lews Category'
         ]);
 
-        $category->assertStatus(201);
+        $category->assertStatus(200);
         
         $this->assertEquals(
             $category->decodeResponseJson()['title'],
@@ -49,7 +49,7 @@ class CreateCategoryTest extends TestCase
             'title' => 'Lews Category'
         ]);
         
-        $category->assertStatus(201);
+        $category->assertStatus(200);
 
         $category = $this->json("POST", "/api/category/create", [
             'title' => 'Lews Category'

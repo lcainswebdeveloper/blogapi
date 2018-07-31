@@ -52,7 +52,7 @@ class UpdatePostTest extends TestCase
             'title' => 'Lews post',
             'content' => 'Some Content'
         ]);
-        $post->assertStatus(201);
+        $post->assertStatus(200);
         
         /*Create another dummy post*/
         $this->json("POST", "/api/blog-post/create", [

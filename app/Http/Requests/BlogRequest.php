@@ -47,14 +47,18 @@ class BlogRequest{
     }
 
     protected function savedItem(){
+        return $this->modelInstance->post($this->modelInstance->id);
+    }
+
+    protected function postSave(){
         return $this->modelInstance;
-        //return $this->modelInstance->listing('id', $this->modelInstance->id);
     }
 
     protected function persist(){
         $record = $this->globalAssignFormData();
         $record->save();
         $this->modelInstance = $record;
+        $this->postSave();
         return $this->savedItem();
     }
 

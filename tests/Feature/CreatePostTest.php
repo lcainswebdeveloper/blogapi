@@ -20,7 +20,7 @@ class CreatePostTest extends TestCase
             'content' => 'Some Content'
         ]);
 
-        $post->assertStatus(201);
+        $post->assertStatus(200);
         
         $this->assertEquals(
             $post->decodeResponseJson()['title'],
@@ -57,7 +57,7 @@ class CreatePostTest extends TestCase
             'title' => 'Lews Post',
             'content' => 'Some Content'
         ]); 
-        $post->assertStatus(201); //first instance
+        $post->assertStatus(200); //first instance
 
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews Post',
@@ -70,8 +70,10 @@ class CreatePostTest extends TestCase
     /** @test **/
     public function we_can_assign_categories_to_posts()
     {
-        factory(\App\User::class)->create();
-        $category = factory(\App\Category::class)->create([
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user, 'api');
+
+        factory(\App\Category::class)->create([
             'title' => 'Cat One',
             'slug' => 'cat-one'
         ]);
@@ -87,6 +89,25 @@ class CreatePostTest extends TestCase
             'title' => 'Cat Four',
             'slug' => 'cat-four'
         ]);
-        prepr(\App\Category::listings()->toArray());
+        //prepr(\App\Category::listings()->toArray());
+        $post = $this->json("POST", "/api/blog-post/create", [
+            'title' => 'Lews Post',
+            'content' => 'Some Content',
+            'categories' => [3,4]
+        ]); 
+
+        $this->assertEquals(3, $post->decodeResponseJson()['categories'][0]['id']);
+        $this->assertEquals(4, $post->decodeResponseJson()['categories'][1]['id']);
+
+        /*Also check that the categories can be altered when post is edited*/
+        $updated = $this->json("POST", "/api/blog-post/" . $post->decodeResponseJson()['id'] . "/update", [
+            'title' => 'Lews post edited',
+            'content' => 'Some Content',
+            'categories' => [1,2]
+        ]);
+        $updated->assertStatus(200);
+        $this->assertEquals(1, $updated->decodeResponseJson()['categories'][0]['id']);
+        $this->assertEquals(2, $updated->decodeResponseJson()['categories'][1]['id']);
     }
 }
+

@@ -20,9 +20,19 @@ class Request extends BlogRequest{
         $this->modelInstance->title = $title = $this->form['title'];
         $this->modelInstance->slug = slugify($title);
         $this->modelInstance->content = $this->form['content'];
+
         if(!isset($this->modelInstance->id)):
             $this->modelInstance->user_id = auth()->id();
         endif;
+        
+        return $this->modelInstance;
+    }
+
+    protected function postSave(){
+        if(isset($this->form['categories'])):
+            $this->modelInstance->categories()->sync($this->form['categories']);
+        endif;
+
         return $this->modelInstance;
     }
 }

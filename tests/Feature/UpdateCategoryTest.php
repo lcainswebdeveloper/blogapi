@@ -49,7 +49,7 @@ class UpdateCategoryTest extends TestCase
         $category = $this->json("POST", "/api/category/create", [
             'title' => 'Lews Category'
         ]);
-        $category->assertStatus(201);
+        $category->assertStatus(200);
         
         /*Create another dummy category*/
         $this->json("POST", "/api/category/create", [

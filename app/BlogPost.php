@@ -8,8 +8,16 @@ class BlogPost extends BlogModel
     protected $orderDir = 'desc';
 
     public function loadRelationships($query){
-        return $query->with('user');
+        return $query->with(['user', 'categories']);
     }
 
+    public function categories(){
+        return $this->belongsToMany(
+            Category::class, 
+            'blog_posts_categories_pivot',
+            'blog_posts_id',
+            'category_id'
+        );
+    }
 }
 
