@@ -15,14 +15,25 @@ class PostApiTest extends TestCase
         $user = factory(\App\User::class)->create();
         $this->actingAs($user, 'api');
 
-        $category = $this->json("POST", "/api/blog-post/create", [
+        factory(\App\Category::class)->create([
+            'title' => 'Cat One',
+            'slug' => 'cat-one'
+        ]);
+        factory(\App\Category::class)->create([
+            'title' => 'Cat Two',
+            'slug' => 'cat-two'
+        ]);
+
+        $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Second Title',
-            'content' => 'Some content'
+            'content' => 'Some content',
+            'categories' => [1]
         ]);
         
-        $category2 = $this->json("POST", "/api/blog-post/create", [
+        $post2 = $this->json("POST", "/api/blog-post/create", [
             'title' => 'First Title',
-            'content' => 'Some content'
+            'content' => 'Some content',
+            'categories' => [1,2]
         ]);
         
         $listings = $this->json("GET", "/api/posts/blog-posts");
@@ -35,6 +46,11 @@ class PostApiTest extends TestCase
             $listings->decodeResponseJson()[0]['id'],
             1
         ); //confirm ordering is correct
+
+        /*Confirm categories are present also*/
+        $this->assertEquals(1, $listings->decodeResponseJson()[0]['categories'][0]['id']);
+        $this->assertEquals(1, $listings->decodeResponseJson()[1]['categories'][0]['id']);
+        $this->assertEquals(2, $listings->decodeResponseJson()[1]['categories'][1]['id']);
     }
 
     /** @test **/
@@ -42,10 +58,19 @@ class PostApiTest extends TestCase
     {
         $user = factory(\App\User::class)->create();
         $this->actingAs($user, 'api');
+        factory(\App\Category::class)->create([
+            'title' => 'Cat One',
+            'slug' => 'cat-one'
+        ]);
+        factory(\App\Category::class)->create([
+            'title' => 'Cat Two',
+            'slug' => 'cat-two'
+        ]);
 
         $this->json("POST", "/api/blog-post/create", [
             'title' => 'My Post',
-            'content' => 'Some content'
+            'content' => 'Some content',
+            'categories' => [1,2]
         ]);
 
         $listing = $this->json("GET", "/api/post/blog-posts/1");
@@ -72,5 +97,10 @@ class PostApiTest extends TestCase
             $listing->decodeResponseJson()['title'],
             'My Post'
         );
+
+       /*Confirm categories are present also*/
+        $this->assertEquals(1, $listing->decodeResponseJson()['categories'][0]['id']);
+        $this->assertEquals(2, $listing->decodeResponseJson()['categories'][1]['id']);
+    
     }
 }
