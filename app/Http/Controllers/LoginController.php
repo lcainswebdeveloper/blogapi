@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -30,5 +32,17 @@ class LoginController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string'
         ]);
+    }
+
+    public function verify(Request $request)
+    {
+        $check = User::whereId($request->user_id)->whereApiToken($request->api_token)->first();
+        if (count($check) == 1):
+            Auth::login($check);
+            $user = Auth::user();
+            return response()->json($user, 200);
+        endif;
+
+        return response()->json('Not Authorised', 401);
     }
 }

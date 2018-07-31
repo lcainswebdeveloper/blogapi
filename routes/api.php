@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('/user/login', 'LoginController@login');
+Route::post('/user/verify', 'LoginController@verify');
 
 Route::get('/posts/categories', 'CategoryController@index');
 Route::get('/post/categories/{param}', 'CategoryController@show');
