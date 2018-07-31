@@ -17,4 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/posts/categories', 'CategoryController@index');
+Route::get('/post/categories/{param}', 'CategoryController@show');
 Route::middleware('auth:api')->post('/category/create', 'CategoryController@store');
+Route::middleware('auth:api')->post('/category/{id}/update', 'CategoryController@update');

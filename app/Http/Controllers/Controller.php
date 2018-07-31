@@ -10,4 +10,58 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected $model;
+    protected $validator;
+
+    /**
+     * Display resource listings
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return (new $this->model)->listings();
+    }
+
+    /**
+     * Display the specified resource.
+     * Param can be slug or id
+     * @param $param
+     * @return \Illuminate\Http\Response
+     */
+    public function show($param)
+    {
+        return (new $this->model)->post($param);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store()
+    {
+        $this->validator = new $this->validator;
+        $this->model = new $this->model;
+        $this->validator->modelInstance = $this->model;
+        $this->validator->validate();
+        return $this->validator->create();
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        $this->validator = new $this->validator;
+        $this->validator->modelInstance = (new $this->model)->find($id);
+        $this->validator->validate();
+        return $this->validator->update();
+    }
 }

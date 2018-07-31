@@ -2,9 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Category extends Model
+class Category extends BlogModel
 {
-    //
+    protected $orderBy = 'title';
+    protected $orderDir = 'asc';
+
+    public function loadRelationships($query){
+        return $query->with('user');
+    }
+
 }
+

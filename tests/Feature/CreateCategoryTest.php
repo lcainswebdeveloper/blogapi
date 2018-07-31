@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class CategoryTest extends TestCase
+class CreateCategoryTest extends TestCase
 {
     use RefreshDatabase;
     
@@ -18,7 +18,7 @@ class CategoryTest extends TestCase
         $category = $this->json("POST", "/api/category/create", [
             'title' => 'Lews Category'
         ]);
-        
+
         $category->assertStatus(201);
         
         $this->assertEquals(
@@ -44,12 +44,11 @@ class CategoryTest extends TestCase
         $category = $this->json("POST", "/api/category/create",[]);
 
         $category->assertStatus(422);
-
-
+        
         $category = $this->json("POST", "/api/category/create", [
             'title' => 'Lews Category'
         ]);
-
+        
         $category->assertStatus(201);
 
         $category = $this->json("POST", "/api/category/create", [
