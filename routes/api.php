@@ -21,3 +21,8 @@ Route::get('/posts/categories', 'CategoryController@index');
 Route::get('/post/categories/{param}', 'CategoryController@show');
 Route::middleware('auth:api')->post('/category/create', 'CategoryController@store');
 Route::middleware('auth:api')->post('/category/{id}/update', 'CategoryController@update');
+
+Route::get('/posts/blog-posts', 'BlogPostController@index');
+Route::get('/post/blog-posts/{param}', 'BlogPostController@show');
+Route::middleware('auth:api')->post('/blog-post/create', 'BlogPostController@store');
+Route::middleware('auth:api')->post('/blog-post/{id}/update', 'BlogPostController@update');
