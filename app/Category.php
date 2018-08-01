@@ -14,10 +14,10 @@ class Category extends BlogModel
     public function posts()
     {
         return $this->belongsToMany(
-            Category::class,
+            BlogPost::class,
             'blog_posts_categories_pivot',
-            'blog_posts_id',
-            'category_id'
+            'category_id',
+            'blog_posts_id'
         );
     }
 }
