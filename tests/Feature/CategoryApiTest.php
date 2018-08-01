@@ -70,4 +70,91 @@ class CategoryApiTest extends TestCase
             'My Category'
         );
     }
+
+    /** @test **/
+    public function categories_will_display_correct_posts()
+    {
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user, 'api');
+
+        factory(\App\Category::class)->create([
+            'title' => 'Cat One',
+            'slug' => 'cat-one'
+        ]);
+
+        factory(\App\Category::class)->create([
+            'title' => 'Cat Two',
+            'slug' => 'cat-two'
+        ]);
+
+        $post1 = $this->json("POST", "/api/blog-post/create", [
+            'title' => 'My Post',
+            'abstract' => 'My Abstract',
+            'content' => 'Some content',
+            'categories' => [1,2]
+        ]);
+
+        $post2 = $this->json("POST", "/api/blog-post/create", [
+            'title' => 'My Post 2',
+            'abstract' => 'My Abstract 2',
+            'content' => 'Some content 2',
+            'categories' => [1]
+        ]);
+
+        $listing = $this->json("GET", "/api/post/categories/cat-one");
+        $listing->assertStatus(200);
+        
+        $this->assertEquals(
+            count($listing->decodeResponseJson()['posts']),
+            2
+        );
+
+        foreach($listing->decodeResponseJson()['posts'] as $post):
+            $this->assertEquals(
+                $post['pivot']['category_id'],
+                1
+            );
+        endforeach;
+
+        $listing2 = $this->json("GET", "/api/post/categories/cat-two");
+        $listing2->assertStatus(200);
+        
+        $this->assertEquals(
+            count($listing2->decodeResponseJson()['posts']),
+            1
+        );
+
+        foreach($listing2->decodeResponseJson()['posts'] as $post):
+            $this->assertEquals(
+                $post['pivot']['category_id'],
+                2
+            );
+        endforeach;
+    }
+
+    /** @test **/
+    public function posts_in_categories_should_have_the_user_record_attached()
+    {
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user, 'api');
+
+        factory(\App\Category::class)->create([
+            'title' => 'Cat One',
+            'slug' => 'cat-one'
+        ]);
+
+        $post = $this->json("POST", "/api/blog-post/create", [
+            'title' => 'My Post',
+            'abstract' => 'My Abstract',
+            'content' => 'Some content',
+            'categories' => [1]
+        ]);
+
+        $listing = $this->json("GET", "/api/post/categories/cat-one");
+        $listing->assertStatus(200);
+        
+        $post = $listing->decodeResponseJson()['posts'][0];
+        $this->assertTrue(isset($post['user']));
+        $this->assertTrue($post['user']['id'] == $user->id);
+    }
 }

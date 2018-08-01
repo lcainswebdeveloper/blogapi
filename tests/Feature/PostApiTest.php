@@ -26,12 +26,14 @@ class PostApiTest extends TestCase
 
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Second Title',
+            'abstract' => 'My Abstract',
             'content' => 'Some content',
             'categories' => [1]
         ]);
         
         $post2 = $this->json("POST", "/api/blog-post/create", [
             'title' => 'First Title',
+            'abstract' => 'My Abstract',
             'content' => 'Some content',
             'categories' => [1,2]
         ]);
@@ -69,6 +71,7 @@ class PostApiTest extends TestCase
 
         $this->json("POST", "/api/blog-post/create", [
             'title' => 'My Post',
+            'abstract' => 'My Abstract',
             'content' => 'Some content',
             'categories' => [1,2]
         ]);

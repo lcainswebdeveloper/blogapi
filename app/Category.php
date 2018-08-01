@@ -18,7 +18,7 @@ class Category extends BlogModel
             'blog_posts_categories_pivot',
             'category_id',
             'blog_posts_id'
-        );
+        )->with(['user', 'categories'])->orderBy('created_at', 'desc');
     }
 }
 

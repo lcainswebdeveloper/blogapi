@@ -17,7 +17,7 @@ class BlogPost extends BlogModel
             'blog_posts_categories_pivot',
             'blog_posts_id',
             'category_id'
-        );
+        )->orderBy('title', 'asc');
     }
 }
 

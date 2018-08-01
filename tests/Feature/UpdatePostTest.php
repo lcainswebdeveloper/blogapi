@@ -17,11 +17,13 @@ class UpdatePostTest extends TestCase
         
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews post',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
         
         $updated = $this->json("POST", "/api/blog-post/" . $post->decodeResponseJson()['id'] . "/update", [
             'title' => 'Lews post Edited',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
 
@@ -50,6 +52,7 @@ class UpdatePostTest extends TestCase
 
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews post',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
         $post->assertStatus(200);
@@ -57,6 +60,7 @@ class UpdatePostTest extends TestCase
         /*Create another dummy post*/
         $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews post Two',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
         
@@ -67,6 +71,7 @@ class UpdatePostTest extends TestCase
         /*We shouldn't be able to change our name to another post name*/
         $updated = $this->json("POST", "/api/blog-post/" . $post->decodeResponseJson()['id'] . "/update", [
             'title' => 'Lews post Two',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
         $updated->assertStatus(422);
@@ -74,6 +79,7 @@ class UpdatePostTest extends TestCase
         /*We should be able to keep the same name for our current record*/
         $updated = $this->json("POST", "/api/blog-post/" . $post->decodeResponseJson()['id'] . "/update", [
             'title' => 'Lews post',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
         $updated->assertStatus(200);
@@ -83,6 +89,7 @@ class UpdatePostTest extends TestCase
         $this->actingAs($user2, 'api');
         $updated = $this->json("POST", "/api/blog-post/" . $post->decodeResponseJson()['id'] . "/update", [
             'title' => 'Lews post Edited',
+            'abstract' => 'My Abstract',
             'content' => 'Some Content'
         ]);
         $updated->assertStatus(200);

@@ -9,6 +9,7 @@ class Request extends BlogRequest{
         return [
             'rules'  => [
                 'title' => $this->titleValidation(),
+                'abstract' => 'required',
                 'content' => 'required'
             ],
             'messages' => []
@@ -19,7 +20,8 @@ class Request extends BlogRequest{
     {
         $this->modelInstance->title = $title = $this->form['title'];
         $this->modelInstance->slug = slugify($title);
-        $this->modelInstance->content = $this->form['content'];
+        $this->modelInstance->abstract = $this->form['abstract'];
+        $this->modelInstance->content = nl2br($this->form['content']);
 
         if(!isset($this->modelInstance->id)):
             $this->modelInstance->user_id = auth()->id();
