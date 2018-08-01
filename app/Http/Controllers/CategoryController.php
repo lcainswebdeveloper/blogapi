@@ -11,43 +11,11 @@ class CategoryController extends Controller
     public function __construct(){
         $this->model = Category::class;
         $this->validator = CategoryRequest::class;
-    } 
-
-    
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
-    
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
+    protected function beforeDeleteActions($post)
     {
-        //
-    }
-
-    
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Category $category)
-    {
-        //
+        $post->posts()->detach();
+        return $post;
     }
 }

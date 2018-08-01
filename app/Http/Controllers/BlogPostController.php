@@ -11,5 +11,11 @@ class BlogPostController extends Controller
     public function __construct(){
         $this->model = BlogPost::class;
         $this->validator = BlogPostRequest::class;
-    } 
+    }
+
+    protected function beforeDeleteActions($post)
+    {
+        $post->categories()->detach();
+        return $post;
+    }
 }

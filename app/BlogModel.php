@@ -23,8 +23,16 @@ class BlogModel extends Model
     }
 
     public function scopePost($query, $param){
-        if(is_numeric($param)) return $this->decorated($query)->find($param);
-        return $this->decorated($query)->whereSlug($param)->first();
+        if(is_numeric($param)):
+            $post = $this->decorated($query)->find($param);
+        else:
+            $post = $this->decorated($query)->whereSlug($param)->first();
+        endif;
+        if(count($post) == 0):
+            return response()->json("Record not found", 404);
+        endif;
+        return $post;
+        
     }
 
     public function user(){

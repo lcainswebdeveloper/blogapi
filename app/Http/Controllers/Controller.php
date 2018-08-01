@@ -53,9 +53,6 @@ class Controller extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
@@ -63,5 +60,27 @@ class Controller extends BaseController
         $this->validator->modelInstance = (new $this->model)->find($id);
         $this->validator->validate();
         return $this->validator->update();
+    }
+
+    /*Use to remove any relationship records etc.*/
+    protected function beforeDeleteActions($post){
+        return $post;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $post = (new $this->model)->whereUserId(auth()->id())->find($id);
+        if(count($post) == 0):
+            return response()->json("Unable to delete this record!", 404);
+        endif;
+        
+        $this->beforeDeleteActions($post);
+
+        if($post->delete()):
+            return response()->json("Record deleted successfully", 200);
+        endif;
     }
 }

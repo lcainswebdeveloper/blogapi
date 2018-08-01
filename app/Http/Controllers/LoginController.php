@@ -12,6 +12,7 @@ class LoginController extends Controller
         $this->validateLogin($request);
         if (Auth::attempt($request->only('email', 'password'))):
             $user = Auth::user();
+            Auth::login($user);
             $user->api_token = str_random(60);
             $user->save();
             $user->token = $user->api_token;
