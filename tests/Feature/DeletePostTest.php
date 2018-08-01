@@ -23,7 +23,7 @@ class DeletePostTest extends TestCase
         $user2 = factory(\App\User::class)->create();
         $this->actingAs($user2, 'api');
 
-        $delete = $this->json("DELETE", "/api/blog-post/1/delete");
+        $delete = $this->json("POST", "/api/blog-post/1/delete");
         $delete->assertStatus(404);
     }
 
@@ -43,7 +43,7 @@ class DeletePostTest extends TestCase
         
         $listing->assertStatus(200);
 
-        $delete = $this->json("DELETE", "/api/blog-post/1/delete");
+        $delete = $this->json("POST", "/api/blog-post/1/delete");
         $delete->assertStatus(200);
 
         $listing = $this->json("GET", "/api/post/blog-posts/1");
@@ -77,7 +77,7 @@ class DeletePostTest extends TestCase
 
         $this->assertEquals(\DB::table('blog_posts_categories_pivot')->where('blog_posts_id', 1)->count(),2);
             
-        $delete = $this->json("DELETE", "/api/blog-post/1/delete");
+        $delete = $this->json("POST", "/api/blog-post/1/delete");
 
         $this->assertEquals(\DB::table('blog_posts_categories_pivot')->where('blog_posts_id', 1)->count(), 0);
            

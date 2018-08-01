@@ -72,6 +72,7 @@ class Controller extends BaseController
      */
     public function destroy($id)
     {
+        
         $post = (new $this->model)->whereUserId(auth()->id())->find($id);
         if(count($post) == 0):
             return response()->json("Unable to delete this record!", 404);
