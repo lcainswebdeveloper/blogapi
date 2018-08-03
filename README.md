@@ -3,7 +3,7 @@
 - clone this repo
 - cd into the directory and run composer install
 
-## By default this uses a sqlite database:
+## By default this uses an sqlite database:
 - touch database/database.sqlite
 - cp .env.bak .env 
 - set the absolute path to your database.sqlite file
