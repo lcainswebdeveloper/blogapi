@@ -7,6 +7,7 @@
 - touch database/database.sqlite
 - cp .env.bak .env 
 - set the absolute path to your database.sqlite file
+- run php artisan migrate
 - That should be it.
 
 Now just run php-unit: vendor/bin/phpunit --color and you should hopefully get green!
