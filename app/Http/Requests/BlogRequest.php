@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 class BlogRequest{
-    public $requestData = [];
     public $modelInstance;
     protected $form;
     
@@ -71,4 +70,5 @@ class BlogRequest{
     {
         return $this->persist();
     }
+
 }
