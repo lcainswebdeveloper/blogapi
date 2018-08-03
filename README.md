@@ -1,17 +1,32 @@
 # Laravel Blog - A simple blog rest api build using Laravel
 
 - clone this repo
-- cd into the directory and run composer install
+- cd into the directory  
+```
+composer install
+```
 
 ## By default this uses an sqlite database:
-- touch database/database.sqlite
-- cp .env.bak .env 
+
+```
+touch database/database.sqlite
+cp .env.bak .env 
+```
 - set the absolute path to your database.sqlite file
-- run php artisan migrate
-- ensure you create an initial App\User (php artisan tinker is probably the easiest way)
+```
+php artisan migrate
+```
+- ensure you create an initial App\User
+```
+php artisan db:seed --class=UsersTableSeeder
+```
 - That should be it.
 
-Now just run php-unit: vendor/bin/phpunit --color and you should hopefully get green!
+Now just run php-unit: 
+```
+vendor/bin/phpunit --color
+```
+and you should hopefully get green!
 
 ### Production notes
 - If you are going to use the sqlite file on your server don't forget to recreate your database.sqlite file and also make sure the path in the .env file is correct.
