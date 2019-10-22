@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 class BlogRequest{
     public $modelInstance;
     protected $form;
-    
+
     public function __construct(){
         $this->form = request()->all();
     }
@@ -34,7 +34,7 @@ class BlogRequest{
     public function validate()
     {
         $inputs = request()->validate(
-            $this->globalValidationRules()['rules'], 
+            $this->globalValidationRules()['rules'],
             $this->globalValidationRules()['messages']
         );
         return $inputs;
@@ -65,7 +65,7 @@ class BlogRequest{
     {
         return $this->persist();
     }
-    
+
     public function update()
     {
         return $this->persist();

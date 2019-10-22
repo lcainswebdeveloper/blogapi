@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+COMPOSE="docker-compose"
+
+if [ $# -gt 0 ];then
+    if [ "$1" == "art" ]; then
+        shift 1
+        $COMPOSE run --rm $TTY \
+            -w /var/www/html \
+            larablog-fpm \
+            php artisan "$@"
+    # If "composer" is used, pass-thru to "composer"
+    # inside a new container
+    elif [ "$1" == "composer" ]; then
+        shift 1
+        $COMPOSE run --rm $TTY \
+            -w /var/www/html \
+            larablog-fpm \
+            composer "$@"
+
+    # If "test" is used, run unit tests,
+    # pass-thru any extra arguments to php-unit
+    elif [ "$1" == "test" ]; then
+        shift 1
+        $COMPOSE run --rm $TTY \
+            -w /var/www/html \
+            larablog-fpm \
+            APP_ENV=foo ./vendor/bin/phpunit "$@"
+
+    elif [ "$1" == "yarn" ]; then
+        shift 1
+        $COMPOSE run --rm $TTY \
+            -w /home/node/app \
+            yarn \
+            yarn "$@"
+
+    elif [ "$1" == "t" ]; then
+        shift 1
+        $COMPOSE exec \
+            larablog-fpm \
+            sh -c "cd /var/www/html && php artisan cache:clear && php artisan config:clear && DB_CONNECTION=testing && ./vendor/bin/phpunit --stop-on-failure -c phpunit-ps.xml $@"
+    else
+        $COMPOSE "$@"
+    fi
+else
+    $COMPOSE ps
+fi

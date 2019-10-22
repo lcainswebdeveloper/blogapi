@@ -8,15 +8,16 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $this->validateLogin($request);
         if (Auth::attempt($request->only('email', 'password'))):
             $user = Auth::user();
-            Auth::login($user);
-            $user->api_token = str_random(60);
-            $user->save();
-            $user->token = $user->api_token;
-            return response()->json($user, 200);
+        Auth::login($user);
+        $user->api_token = str_random(60);
+        $user->save();
+        $user->token = $user->api_token;
+        return response()->json($user, 200);
         endif;
         return response()->json('Not Authorised', 401);
     }
@@ -38,10 +39,10 @@ class LoginController extends Controller
     public function verify(Request $request)
     {
         $check = User::whereId($request->user_id)->whereApiToken($request->api_token)->first();
-        if (count($check) == 1):
+        if ($check):
             Auth::login($check);
-            $user = Auth::user();
-            return response()->json($user, 200);
+        $user = Auth::user();
+        return response()->json($user, 200);
         endif;
 
         return response()->json('Not Authorised', 401);

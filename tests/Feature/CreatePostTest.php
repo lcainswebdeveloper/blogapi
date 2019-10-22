@@ -8,13 +8,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreatePostTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test **/
     public function create_a_post()
     {
         $user = factory(\App\User::class)->create();
         $this->actingAs($user, 'api');
-        
+
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews Post',
             'content' => 'Some Content',
@@ -22,7 +22,7 @@ class CreatePostTest extends TestCase
         ]);
 
         $post->assertStatus(200);
-        
+
         $this->assertEquals(
             $post->decodeResponseJson()['title'],
             'Lews Post'
@@ -52,7 +52,7 @@ class CreatePostTest extends TestCase
         $this->actingAs($user, 'api');
 
         $post = $this->json("POST", "/api/blog-post/create",[]);
-
+        //dd($post->decodeResponseJson());
         $post->assertStatus(422);
 
         /*We need to provide content*/
@@ -60,20 +60,20 @@ class CreatePostTest extends TestCase
             "title" => "Foobar"
         ]);
         $post->assertStatus(422);
-        
+
         /*We shouldn't be able to duplicate a post name*/
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews Post',
             'abstract' => 'My Abstract',
             'content' => 'Some Content'
-        ]); 
+        ]);
         $post->assertStatus(200); //first instance
 
         $post = $this->json("POST", "/api/blog-post/create", [
             'title' => 'Lews Post',
             'content' => 'Some Content'
         ]);
-        
+
         $post->assertStatus(422);
     }
 
@@ -105,7 +105,7 @@ class CreatePostTest extends TestCase
             'abstract' => 'My Abstract',
             'content' => 'Some Content',
             'categories' => [3,4]
-        ]); 
+        ]);
 
         $this->assertEquals(4, $post->decodeResponseJson()['categories'][0]['id']);
         $this->assertEquals(3, $post->decodeResponseJson()['categories'][1]['id']);

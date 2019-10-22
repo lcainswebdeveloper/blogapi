@@ -26,7 +26,7 @@ class Request extends BlogRequest{
         if(!isset($this->modelInstance->id)):
             $this->modelInstance->user_id = auth()->id();
         endif;
-        
+
         return $this->modelInstance;
     }
 

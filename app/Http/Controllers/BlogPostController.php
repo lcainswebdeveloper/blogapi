@@ -8,14 +8,17 @@ use App\Http\Requests\BlogPost\Request as BlogPostRequest;
 
 class BlogPostController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         $this->model = BlogPost::class;
         $this->validator = BlogPostRequest::class;
     }
 
     protected function beforeDeleteActions($post)
     {
-        $post->categories()->detach();
+        if (!is_null($post->categories())) {
+            $post->categories()->detach();
+        }
         return $post;
     }
 }

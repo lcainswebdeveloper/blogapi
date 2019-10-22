@@ -1,0 +1,8 @@
+FROM nginx:latest
+
+MAINTAINER Lewis Cains
+
+COPY . /var/www/html
+COPY .docker/nginx/conf.d /etc/nginx/conf.d
+
+ENV PHP_FPM larablog-fpm

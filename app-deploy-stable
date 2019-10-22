@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo "Building app image..."
+docker build -t registry.gitlab.com/lcainswebdeveloper/larablog/app:stable -f Dockerfile.app .
+docker build -t registry.gitlab.com/lcainswebdeveloper/larablog/webserver:stable -f Dockerfile.nginx .
+
+echo "Pushing app image..."
+docker push registry.gitlab.com/lcainswebdeveloper/larablog/app:stable
+docker push registry.gitlab.com/lcainswebdeveloper/larablog/webserver:stable

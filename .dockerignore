@@ -1,0 +1,30 @@
+.git*
+.editorconfig
+Dockerfile*
+composer.lock
+yarn.lock
+package.json
+.env
+
+larablog-fpm:
+    image: registry.gitlab.com/lcainswebdeveloper/larablog/app:stable
+    container_name: larablog-fpm
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    networks:
+      - lcainswebdeveloper-network
+larablog-nginx:
+    image: registry.gitlab.com/lcainswebdeveloper/larablog/webserver:stable
+    container_name: larablog-nginx
+    networks:
+      - lcainswebdeveloper-network
+    labels:
+      - "traefik.docker.network=lcainswebdeveloper-network"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:larablog.lcainswebdeveloper.co.uk/"
+      - "traefik.basic.port=80"
+      - "traefik.basic.protocol=http"
+      - "traefik.backend=larablog-nginx"
+      - "traefik.frontend.rule=Host:larablog.lcainswebdeveloper.co.uk/"
+

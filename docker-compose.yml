@@ -1,0 +1,59 @@
+version: "2"
+services:
+    traefik:
+        image: traefik:alpine # The official Traefik docker image
+        command: --api --docker # Enables the web UI and tells Traefik to listen to docker
+        ports:
+            - "80:80" # The HTTP port
+            - "8080:8080" # The Web UI (enabled by --api)
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can
+        networks:
+            - lewsblog-network
+    larablog-fpm:
+        env_file:
+            - .env
+        image: registry.gitlab.com/lcainswebdeveloper/larablog/app:stable
+        build:
+            context: .
+            dockerfile: Dockerfile.app
+        container_name: larablog-fpm
+        restart: unless-stopped
+        tty: true
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+            - ./.docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - lewsblog-network
+    #Nginx Service
+    larablog-nginx:
+        image: registry.gitlab.com/lcainswebdeveloper/larablog/webserver:stable
+        container_name: larablog-nginx
+        build:
+            context: .
+            dockerfile: Dockerfile.nginx
+        volumes:
+            - .:/var/www/html
+        networks:
+            - lewsblog-network
+        labels:
+            - "traefik.docker.network=lewsblog-network"
+            - "traefik.enable=true"
+            - "traefik.basic.frontend.rule=Host:larablog.test"
+            - "traefik.basic.port=80"
+            - "traefik.basic.protocol=http"
+            - "traefik.backend=larablog-nginx"
+            - "traefik.frontend.rule=Host:larablog.test"
+    yarn:
+        image: "node:8"
+        user: "node"
+        working_dir: /home/node/app
+        environment:
+            - NODE_ENV=development
+        volumes:
+            - ".:/home/node/app"
+        command: "yarn"
+networks:
+    lewsblog-network:
+        driver: "bridge"
